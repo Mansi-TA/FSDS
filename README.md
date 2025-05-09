@@ -5,7 +5,6 @@ The housing data can be downloaded from https://raw.githubusercontent.com/ageron
 The following techniques have been used: 
 
  - Linear regression
- - Decision Tree
  - Random Forest
 
 ## Steps performed
@@ -15,4 +14,5 @@ The following techniques have been used:
  - All the above said modelling techniques are tried and evaluated. The final metric used to evaluate is mean squared error.
 
 ## To excute the script
-python < scriptname.py >
+1. run-pipeline
+2. python src/FSDS_/main.py
