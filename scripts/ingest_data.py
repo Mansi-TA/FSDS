@@ -2,9 +2,7 @@ import argparse
 import logging
 import os
 
-import pandas as pd
-
-from FSDS_.ingest import *
+from FSDS_.ingest import fetch_housing_data, load_housing_data
 from FSDS_.train import stratified_split
 
 

@@ -5,7 +5,7 @@ import pickle
 
 import pandas as pd
 
-from FSDS_.score import *
+from FSDS_.score import score_model
 from FSDS_.train import preprocess_data
 
 
@@ -37,7 +37,6 @@ def main(model_folder, dataset_folder, output_folder=None):
 
     logging.info("Splitting test data into features and labels...")
     x_test = test_set.drop(columns=["median_house_value"])
-    y_test = test_set["median_house_value"]
 
     logging.info("Extracting imputer from training preprocessing...")
     _, imputer = preprocess_data(x_test, fit=True)
