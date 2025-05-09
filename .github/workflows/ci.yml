@@ -89,7 +89,7 @@ jobs:
         run: tree -L 2
 
       - name: Upload dist and env
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
           path: |
