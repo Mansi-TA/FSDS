@@ -126,6 +126,6 @@ jobs:
         shell: bash -l {0}
         run: |
           echo "Running workflow scripts with timestamp logs"
-          python scripts/ingest_script.py --output_folder datasets/scripts
+          python scripts/ingest_data.py --output_folder datasets/scripts
           python scripts/train.py --output_folder datasets/models --input_folder datasets/scripts/
           python scripts/score.py --model_folder datasets/models/ --dataset_folder datasets/scripts/ --output_folder datasets/results
