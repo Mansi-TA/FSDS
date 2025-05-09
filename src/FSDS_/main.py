@@ -1,6 +1,6 @@
 from FSDS_.ingest import fetch_housing_data, load_housing_data
 from FSDS_.score import preprocess_data, score_model
-from FSDS_.train import stratified_split, linear_reg, random_forest
+from FSDS_.train import linear_reg, random_forest, stratified_split
 
 
 def main():

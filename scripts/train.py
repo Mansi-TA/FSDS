@@ -5,7 +5,7 @@ import pickle
 
 import pandas as pd
 
-from FSDS_.train import preprocess_data, linear_reg, random_forest
+from FSDS_.train import linear_reg, preprocess_data, random_forest
 
 
 def setup_logging(log_filename, log_dir="logs"):
