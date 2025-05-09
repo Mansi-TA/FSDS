@@ -1,9 +1,9 @@
 def test_package_imports():
-    try: 
+    try:
         import FSDS_
         import FSDS_.feature
         import FSDS_.ingest
-        import FSDS_.train
         import FSDS_.main
+        import FSDS_.train
     except ImportError as e:
-        assert False,f"Import failed{e}"
+        assert False, f"Import failed{e}"

@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
-from FSDS_.train import stratified_split,linear_reg
+
+from FSDS_.train import linear_reg, stratified_split
+
 
 def test_stratified_split():
     data = {
@@ -16,20 +18,18 @@ def test_stratified_split():
         "households": [2] * 60,
     }
     df = pd.DataFrame(data)
-    train_set, test_set = stratified_split(df) 
-    
+    train_set, test_set = stratified_split(df)
+
     assert len(train_set) + len(test_set) == len(df)
-    assert abs(len(test_set)/len(df) - 0.2) < 0.05
+    assert abs(len(test_set) / len(df) - 0.2) < 0.05
+
 
 def test_linear_reg():
-    X = {
-        "col_1":[1,2,3,4,5],
-        "col_2":[5,6,7,8,9]
-    }
+    X = {"col_1": [1, 2, 3, 4, 5], "col_2": [5, 6, 7, 8, 9]}
     X = pd.DataFrame(X)
-    y = pd.Series([100,200,300,400,500])
+    y = pd.Series([100, 200, 300, 400, 500])
 
-    model = linear_reg(X,y)
+    model = linear_reg(X, y)
     predicted_value = model.predict(X)
     assert len(predicted_value) == len(y)
-    assert isinstance(predicted_value,np.ndarray)
+    assert isinstance(predicted_value, np.ndarray)
