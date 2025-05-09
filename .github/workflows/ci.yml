@@ -20,14 +20,17 @@ jobs:
           environment-file: env.yml
           auto-activate-base: false
           activate-environment: fsds-env
-
+    
       - name: Run isort
+        shell: bash -l {0}
         run: isort . --check --diff
 
       - name: Run black
+        shell: bash -l {0}
         run: black . --check --diff
 
       - name: Run flake8
+        shell: bash -l {0}
         run: flake8 .
 
   unit-functional-tests:
@@ -46,10 +49,11 @@ jobs:
           activate-environment: fsds-env
 
       - name: Install package in dev mode
-        run: |
-          pip install -e .
+        shell: bash -l {0}
+        run: pip install -e .
 
       - name: Run pytest
+        shell: bash -l {0}
         run: pytest tests/
         env:
           PYTHONPATH: "."
