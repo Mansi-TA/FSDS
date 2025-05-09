@@ -1,7 +1,40 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "fsds"
 version = "0.1.0"
-description = "Add your description here"
+description = "A modular ML pipline for HousePrediction"
+authors = [
+    { name = "Mansi Dwivedi", email = "mansi.dwivedi@tigeranalytics.com"}
+]
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "pandas",
+    "numpy",
+    "matplotlib",
+    "scikit-learn"
+]
+
+[tool.setuptools.packages.find]
+where=["src"]
+
+[project.scripts]
+run-pipeline = "FSDS_.main:main"
+
+[project.optional-dependencies]
+dev = ["black","isort","flake8"]
+
+[tool.black]
+line-length = 88
+target-version =['py311']
+
+[tool.isort]
+profile = "black"
+line_length = 88
+use_parentheses = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]  
