@@ -1,1 +1,8 @@
 *.Identifier
+
+#Ignoring pycache
+__pycache__/
+
+dist/
+
+*.txt 
