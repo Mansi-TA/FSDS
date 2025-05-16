@@ -1,0 +1,15 @@
+artifact_uri: file:///home/mansi_ta/FSDS_/mlruns/234512808014410394/0c9c6bd5fa1b4348a5f3ef8c092f208e/artifacts
+end_time: 1747394890198
+entry_point_name: ''
+experiment_id: '234512808014410394'
+lifecycle_stage: active
+run_id: 0c9c6bd5fa1b4348a5f3ef8c092f208e
+run_name: Full_Pipeline
+run_uuid: 0c9c6bd5fa1b4348a5f3ef8c092f208e
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1747394825206
+status: 3
+tags: []
+user_id: mansi_ta

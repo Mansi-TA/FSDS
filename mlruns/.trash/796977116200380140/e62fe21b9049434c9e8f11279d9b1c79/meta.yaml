@@ -1,0 +1,16 @@
+artifact_uri: file:///home/mansi_ta/FSDS_/mlruns/796977116200380140/e62fe21b9049434c9e8f11279d9b1c79/artifacts
+deleted_time: 1747392733291
+end_time: 1747390045031
+entry_point_name: ''
+experiment_id: '796977116200380140'
+lifecycle_stage: deleted
+run_id: e62fe21b9049434c9e8f11279d9b1c79
+run_name: Model Scoring
+run_uuid: e62fe21b9049434c9e8f11279d9b1c79
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1747390044933
+status: 3
+tags: []
+user_id: mansi_ta
