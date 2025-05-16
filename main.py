@@ -8,6 +8,8 @@ from scripts.ingest_data import run_ingestion
 from scripts.score import run_scoring
 from scripts.train import run_training
 
+mlflow.set_tracking_uri("file:./mlruns")
+
 
 def setup_logging(log_filename, log_dir="logs"):
     os.makedirs(log_dir, exist_ok=True)

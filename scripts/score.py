@@ -9,6 +9,8 @@ import pandas as pd
 from FSDS_.score import score_model
 from FSDS_.train import preprocess_data
 
+mlflow.set_tracking_uri("file:./mlruns")
+
 
 def setup_logging(log_filename, log_dir="logs"):
     os.makedirs(log_dir, exist_ok=True)
