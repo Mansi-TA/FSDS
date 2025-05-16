@@ -1,0 +1,15 @@
+artifact_uri: file:///home/mansi_ta/FSDS_/mlruns/235389369716380414/d352000b9de945a69d253b89a23fb035/artifacts
+end_time: 1747406311646
+entry_point_name: ''
+experiment_id: '235389369716380414'
+lifecycle_stage: active
+run_id: d352000b9de945a69d253b89a23fb035
+run_name: Model Training
+run_uuid: d352000b9de945a69d253b89a23fb035
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1747406255816
+status: 3
+tags: []
+user_id: mansi_ta

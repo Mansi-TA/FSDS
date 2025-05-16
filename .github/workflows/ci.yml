@@ -124,6 +124,8 @@ jobs:
 
       - name: Run workflow scripts (log to console)
         shell: bash -l {0}
+        env:
+          MLFLOW_TRACKING_URI: file:./mlruns
         run: |
           echo "Running workflow scripts with timestamp logs"
           python scripts/ingest_data.py --output_folder outputs/data
