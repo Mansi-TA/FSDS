@@ -1,11 +1,10 @@
 import argparse
 import logging
 import os
+import pickle
 
 import mlflow
 import mlflow.sklearn
-import pickle
-
 import pandas as pd
 
 from FSDS_.train import linear_reg, preprocess_data, random_forest
@@ -40,31 +39,30 @@ def run_training(input_folder, output_folder):
     X_train = train_set.drop(columns=["median_house_value"])
     y_train = train_set["median_house_value"]
 
-    #Starting mlflow
-    with mlflow.start_run(run_name="Model Training",nested=True) as run:
+    # Starting mlflow
+    with mlflow.start_run(run_name="Model Training", nested=True) as run:
         print(f"Train Run ID:{run.info.run_id}")
 
         X_train_pre, imputer = preprocess_data(X_train)
-        imputer_path = os.path.join(output_folder,"imputer.pkl")
+        imputer_path = os.path.join(output_folder, "imputer.pkl")
 
-        with open(imputer_path,"wb") as f:
-            pickle.dump(imputer,f)
+        with open(imputer_path, "wb") as f:
+            pickle.dump(imputer, f)
         mlflow.log_artifact(imputer_path, artifact_path="trained_models")
 
         # Training linear regression model
         logging.info("Training Linear Regression model...")
         linear_model = linear_reg(X_train_pre, y_train)
 
-        mlflow.sklearn.log_model(linear_model,"Linear_Regression_Model")
-        mlflow.log_param("model_type_1","LinearRegression")
+        mlflow.sklearn.log_model(linear_model, "Linear_Regression_Model")
+        mlflow.log_param("model_type_1", "LinearRegression")
 
         # Train Random Forest model
         logging.info("Training Random Forest model...")
         rf_model, _ = random_forest(X_train_pre, y_train)
 
-        mlflow.sklearn.log_model(rf_model,"Random_Forest_Model")
-        mlflow.log_param("model_type_2","RandomForest")
-
+        mlflow.sklearn.log_model(rf_model, "Random_Forest_Model")
+        mlflow.log_param("model_type_2", "RandomForest")
 
         lin_model_path = os.path.join(output_folder, "linear_regression_model.pkl")
         rf_model_path = os.path.join(output_folder, "random_forest_model.pkl")

@@ -4,7 +4,6 @@ import os
 import pickle
 
 import mlflow
-
 import pandas as pd
 
 from FSDS_.score import score_model
@@ -30,7 +29,7 @@ def run_scoring(model_folder, dataset_folder, output_folder=None):
     setup_logging("score.log")
     logging.info("Starting model scoring...")
 
-    with mlflow.start_run(run_name="Model Scoring",nested=True) as run:
+    with mlflow.start_run(run_name="Model Scoring", nested=True) as run:
         print(f"Score run id:{run.info.run_id}")
         test_path = os.path.join(dataset_folder, "test.csv")
         lin_model_path = os.path.join(model_folder, "linear_regression_model.pkl")
@@ -40,8 +39,8 @@ def run_scoring(model_folder, dataset_folder, output_folder=None):
         test_set = pd.read_csv(test_path)
 
         logging.info("Extracting imputer from training preprocessing...")
-        imputer_path = os.path.join(model_folder,"imputer.pkl")
-        with open(imputer_path,"rb") as f:
+        imputer_path = os.path.join(model_folder, "imputer.pkl")
+        with open(imputer_path, "rb") as f:
             imputer = pickle.load(f)
 
         # Load and score Linear Regression model
@@ -59,8 +58,8 @@ def run_scoring(model_folder, dataset_folder, output_folder=None):
         logging.info(f"Linear Regression RMSE: {lin_rmse:.2f}")
         logging.info(f"Random Forest RMSE: {rf_rmse:.2f}")
 
-        mlflow.log_metric("Linear_Regression_RMSE",lin_rmse)
-        mlflow.log_metric("Random_Forest_RMSE",rf_rmse)
+        mlflow.log_metric("Linear_Regression_RMSE", lin_rmse)
+        mlflow.log_metric("Random_Forest_RMSE", rf_rmse)
 
         if output_folder:
             os.makedirs(output_folder, exist_ok=True)
@@ -69,7 +68,7 @@ def run_scoring(model_folder, dataset_folder, output_folder=None):
                 f.write(f"Linear Regression RMSE: {lin_rmse:.2f}\n")
                 f.write(f"Random Forest RMSE: {rf_rmse:.2f}\n")
             logging.info(f"Scores written to {result_path}")
-            mlflow.log_artifact(result_path,artifact_path="scoring_outputs")
+            mlflow.log_artifact(result_path, artifact_path="scoring_outputs")
 
 
 if __name__ == "__main__":

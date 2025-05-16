@@ -1,6 +1,7 @@
 import argparse
 import logging
 import os
+
 import mlflow
 
 from FSDS_.ingest import fetch_housing_data, load_housing_data
@@ -27,12 +28,12 @@ def run_ingestion(output_folder):
     setup_logging("ingest.log")
     logging.info("Starting data ingestion...")
 
-    with mlflow.start_run(run_name="Data Ingestion",nested = True) as run:
+    with mlflow.start_run(run_name="Data Ingestion", nested=True) as run:
 
         print(f"Ingestion Run id:{run.info.run_id}")
-        mlflow.log_param("output_folder",output_folder)
+        mlflow.log_param("output_folder", output_folder)
 
-        os.makedirs(output_folder, exist_ok=True)  
+        os.makedirs(output_folder, exist_ok=True)
 
         logging.info("Fetching house data...")
         fetch_housing_data()
@@ -48,8 +49,8 @@ def run_ingestion(output_folder):
         train_set.to_csv(train_path, index=False)
         test_set.to_csv(test_path, index=False)
 
-        mlflow.log_artifact(train_path,artifact_path="ingested_data")
-        mlflow.log_artifact(test_path,artifact_path="ingested_data")
+        mlflow.log_artifact(train_path, artifact_path="ingested_data")
+        mlflow.log_artifact(test_path, artifact_path="ingested_data")
 
         logging.info("Ingestion completed...")
 
