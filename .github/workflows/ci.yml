@@ -2,7 +2,7 @@ name: CI Workflow
 
 on:
   push:
-    branches: [fix/#1]  # Change to 'main' for production
+    branches: [fix/#3]  
   pull_request:
     branches: [main]
 
