@@ -1,0 +1,15 @@
+artifact_uri: file:///home/mansi_ta/FSDS_/mlruns/854353196212353623/7e16489d9db44c268dcf44909c3953f5/artifacts
+end_time: 1747399787164
+entry_point_name: ''
+experiment_id: '854353196212353623'
+lifecycle_stage: active
+run_id: 7e16489d9db44c268dcf44909c3953f5
+run_name: Data Ingestion
+run_uuid: 7e16489d9db44c268dcf44909c3953f5
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1747399786313
+status: 3
+tags: []
+user_id: mansi_ta
