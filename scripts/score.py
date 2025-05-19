@@ -10,6 +10,10 @@ from FSDS_.score import score_model
 
 mlflow.set_tracking_uri("file:./mlruns")
 
+# Ensure default experiment exists
+if not mlflow.get_experiment_by_name("Default"):
+    mlflow.create_experiment("Default")
+
 
 def setup_logging(log_filename, log_dir="logs"):
     os.makedirs(log_dir, exist_ok=True)

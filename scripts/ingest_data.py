@@ -8,7 +8,10 @@ from FSDS_.ingest import fetch_housing_data, load_housing_data
 from FSDS_.train import stratified_split
 
 mlflow.set_tracking_uri("file:./mlruns")
-print("Tracking URI:", mlflow.get_tracking_uri())
+
+# Ensure default experiment exists
+if not mlflow.get_experiment_by_name("Default"):
+    mlflow.create_experiment("Default")
 
 
 def setup_logging(log_filename, log_dir="logs"):
