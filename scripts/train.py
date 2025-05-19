@@ -50,7 +50,6 @@ def run_training(input_folder, output_folder):
 
         with open(imputer_path, "wb") as f:
             pickle.dump(imputer, f)
-        mlflow.log_artifact(imputer_path, artifact_path="trained_models")
 
         # Training linear regression model
         logging.info("Training Linear Regression model...")

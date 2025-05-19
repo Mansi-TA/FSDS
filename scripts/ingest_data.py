@@ -52,9 +52,6 @@ def run_ingestion(output_folder):
         train_set.to_csv(train_path, index=False)
         test_set.to_csv(test_path, index=False)
 
-        mlflow.log_artifact(train_path, artifact_path="ingested_data")
-        mlflow.log_artifact(test_path, artifact_path="ingested_data")
-
         logging.info("Ingestion completed...")
 
 

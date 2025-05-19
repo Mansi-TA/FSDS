@@ -70,7 +70,6 @@ def run_scoring(model_folder, dataset_folder, output_folder=None):
                 f.write(f"Linear Regression RMSE: {lin_rmse:.2f}\n")
                 f.write(f"Random Forest RMSE: {rf_rmse:.2f}\n")
             logging.info(f"Scores written to {result_path}")
-            mlflow.log_artifact(result_path, artifact_path="scoring_outputs")
 
 
 if __name__ == "__main__":
