@@ -9,7 +9,7 @@ import pandas as pd
 
 from FSDS_.train import linear_reg, preprocess_data, random_forest
 
-mlflow.set_tracking_uri("file:/home/mansi_ta/FSDS_/mlruns")
+mlflow.set_tracking_uri("file:./mlruns")
 
 
 def setup_logging(log_filename, log_dir="logs"):

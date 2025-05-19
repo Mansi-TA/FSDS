@@ -7,7 +7,7 @@ import mlflow
 from FSDS_.ingest import fetch_housing_data, load_housing_data
 from FSDS_.train import stratified_split
 
-mlflow.set_tracking_uri("file:/home/mansi_ta/FSDS_/mlruns")
+mlflow.set_tracking_uri("file:./mlruns")
 print("Tracking URI:", mlflow.get_tracking_uri())
 
 

@@ -8,7 +8,7 @@ import pandas as pd
 
 from FSDS_.score import score_model
 
-mlflow.set_tracking_uri("file:/home/mansi_ta/FSDS_/mlruns")
+mlflow.set_tracking_uri("file:./mlruns")
 
 
 def setup_logging(log_filename, log_dir="logs"):
