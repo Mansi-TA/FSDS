@@ -6,10 +6,23 @@ import pickle
 import mlflow
 import mlflow.sklearn
 import pandas as pd
+from mlflow.tracking import MlflowClient
 
 from FSDS_.train import linear_reg, preprocess_data, random_forest
 
 mlflow.set_tracking_uri("file:./mlruns")
+
+client = MlflowClient()
+
+# Check if experiment exists by name
+experiment_name = "Default"
+experiment = client.get_experiment_by_name(experiment_name)
+
+if experiment is None:
+    client.create_experiment(experiment_name)
+
+# Set experiment
+mlflow.set_experiment(experiment_name)
 
 # Ensure default experiment exists
 if not mlflow.get_experiment_by_name("Default"):
