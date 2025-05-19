@@ -121,6 +121,8 @@ jobs:
         shell: bash -l {0}
         run: |
           pip install downloaded/dist/*.whl
+      - name: Create mlruns directory
+        run: mkdir -p ./mlruns
 
       - name: Run workflow scripts (log to console)
         shell: bash -l {0}

@@ -7,7 +7,7 @@ import mlflow
 from FSDS_.ingest import fetch_housing_data, load_housing_data
 from FSDS_.train import stratified_split
 
-mlflow.set_tracking_uri("file:./mlruns")
+mlflow.set_tracking_uri("file:/home/mansi_ta/FSDS_/mlruns")
 print("Tracking URI:", mlflow.get_tracking_uri())
 
 
@@ -51,6 +51,9 @@ def run_ingestion(output_folder):
         logging.info("Storing training and testing set...")
         train_set.to_csv(train_path, index=False)
         test_set.to_csv(test_path, index=False)
+
+        mlflow.log_artifact(train_path, artifact_path="ingested_data")
+        mlflow.log_artifact(test_path, artifact_path="ingested_data")
 
         logging.info("Ingestion completed...")
 

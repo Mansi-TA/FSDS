@@ -7,9 +7,8 @@ import mlflow
 import pandas as pd
 
 from FSDS_.score import score_model
-from FSDS_.train import preprocess_data
 
-mlflow.set_tracking_uri("file:./mlruns")
+mlflow.set_tracking_uri("file:/home/mansi_ta/FSDS_/mlruns")
 
 
 def setup_logging(log_filename, log_dir="logs"):
@@ -70,6 +69,7 @@ def run_scoring(model_folder, dataset_folder, output_folder=None):
                 f.write(f"Linear Regression RMSE: {lin_rmse:.2f}\n")
                 f.write(f"Random Forest RMSE: {rf_rmse:.2f}\n")
             logging.info(f"Scores written to {result_path}")
+            mlflow.log_artifact(result_path, artifact_path="scoring_outputs")
 
 
 if __name__ == "__main__":

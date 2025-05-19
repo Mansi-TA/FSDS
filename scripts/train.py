@@ -9,7 +9,7 @@ import pandas as pd
 
 from FSDS_.train import linear_reg, preprocess_data, random_forest
 
-mlflow.set_tracking_uri("file:./mlruns")
+mlflow.set_tracking_uri("file:/home/mansi_ta/FSDS_/mlruns")
 
 
 def setup_logging(log_filename, log_dir="logs"):
@@ -50,6 +50,7 @@ def run_training(input_folder, output_folder):
 
         with open(imputer_path, "wb") as f:
             pickle.dump(imputer, f)
+        mlflow.log_artifact(imputer_path, artifact_path="trained_models")
 
         # Training linear regression model
         logging.info("Training Linear Regression model...")
