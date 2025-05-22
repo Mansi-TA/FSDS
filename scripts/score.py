@@ -3,10 +3,25 @@ import logging
 import os
 import pickle
 
+import mlflow
 import pandas as pd
+from mlflow.tracking import MlflowClient
 
 from FSDS_.score import score_model
-from FSDS_.train import preprocess_data
+
+mlflow.set_tracking_uri("file:./mlruns")
+
+client = MlflowClient()
+
+# Check if experiment exists by name
+experiment_name = "Default"
+experiment = client.get_experiment_by_name(experiment_name)
+
+if experiment is None:
+    client.create_experiment(experiment_name)
+
+# Set experiment
+mlflow.set_experiment(experiment_name)
 
 
 def setup_logging(log_filename, log_dir="logs"):
@@ -24,45 +39,50 @@ def setup_logging(log_filename, log_dir="logs"):
     logging.getLogger().addHandler(console)
 
 
-def main(model_folder, dataset_folder, output_folder=None):
+def run_scoring(model_folder, dataset_folder, output_folder=None):
     setup_logging("score.log")
     logging.info("Starting model scoring...")
 
-    test_path = os.path.join(dataset_folder, "test.csv")
-    lin_model_path = os.path.join(model_folder, "linear_regression_model.pkl")
-    rf_model_path = os.path.join(model_folder, "random_forest_model.pkl")
+    with mlflow.start_run(run_name="Model Scoring", nested=True) as run:
+        print(f"Score run id:{run.info.run_id}")
+        test_path = os.path.join(dataset_folder, "test.csv")
+        lin_model_path = os.path.join(model_folder, "linear_regression_model.pkl")
+        rf_model_path = os.path.join(model_folder, "random_forest_model.pkl")
 
-    logging.info(f"Loading test dataset from {test_path}...")
-    test_set = pd.read_csv(test_path)
+        logging.info(f"Loading test dataset from {test_path}...")
+        test_set = pd.read_csv(test_path)
 
-    logging.info("Splitting test data into features and labels...")
-    x_test = test_set.drop(columns=["median_house_value"])
+        logging.info("Extracting imputer from training preprocessing...")
+        imputer_path = os.path.join(model_folder, "imputer.pkl")
+        with open(imputer_path, "rb") as f:
+            imputer = pickle.load(f)
 
-    logging.info("Extracting imputer from training preprocessing...")
-    _, imputer = preprocess_data(x_test, fit=True)
+        # Load and score Linear Regression model
+        logging.info(f"Loading Linear Regression model from {lin_model_path}...")
+        with open(lin_model_path, "rb") as f:
+            lin_model = pickle.load(f)
+        lin_rmse = score_model(lin_model, test_set, imputer)
 
-    # Load and score Linear Regression model
-    logging.info(f"Loading Linear Regression model from {lin_model_path}...")
-    with open(lin_model_path, "rb") as f:
-        lin_model = pickle.load(f)
-    lin_rmse = score_model(lin_model, test_set, imputer)
+        # Load and score Linear Regression model
+        logging.info(f"Loading Random Forest model from {rf_model_path}...")
+        with open(rf_model_path, "rb") as f:
+            rf_model = pickle.load(f)
+        rf_rmse = score_model(rf_model, test_set, imputer)
 
-    # Load and score Linear Regression model
-    logging.info(f"Loading Random Forest model from {rf_model_path}...")
-    with open(rf_model_path, "rb") as f:
-        rf_model = pickle.load(f)
-    rf_rmse = score_model(rf_model, test_set, imputer)
+        logging.info(f"Linear Regression RMSE: {lin_rmse:.2f}")
+        logging.info(f"Random Forest RMSE: {rf_rmse:.2f}")
 
-    logging.info(f"Linear Regression RMSE: {lin_rmse:.2f}")
-    logging.info(f"Random Forest RMSE: {rf_rmse:.2f}")
+        mlflow.log_metric("Linear_Regression_RMSE", lin_rmse)
+        mlflow.log_metric("Random_Forest_RMSE", rf_rmse)
 
-    if output_folder:
-        os.makedirs(output_folder, exist_ok=True)
-        result_path = os.path.join(output_folder, "model_scores.txt")
-        with open(result_path, "w") as f:
-            f.write(f"Linear Regression RMSE: {lin_rmse:.2f}\n")
-            f.write(f"Random Forest RMSE: {rf_rmse:.2f}\n")
-        logging.info(f"Scores written to {result_path}")
+        if output_folder:
+            os.makedirs(output_folder, exist_ok=True)
+            result_path = os.path.join(output_folder, "model_scores.txt")
+            with open(result_path, "w") as f:
+                f.write(f"Linear Regression RMSE: {lin_rmse:.2f}\n")
+                f.write(f"Random Forest RMSE: {rf_rmse:.2f}\n")
+            logging.info(f"Scores written to {result_path}")
+            mlflow.log_artifact(result_path, artifact_path="scoring_outputs")
 
 
 if __name__ == "__main__":
@@ -74,7 +94,10 @@ if __name__ == "__main__":
         help="Folder containing model pickle files",
     )
     parser.add_argument(
-        "--dataset_folder", type=str, required=True, help="Folder containing test.csv"
+        "--dataset_folder",
+        type=str,
+        required=True,
+        help="Folder containing test.csv",
     )
     parser.add_argument(
         "--output_folder",
@@ -83,4 +106,4 @@ if __name__ == "__main__":
         help="Optional folder to save RMSE scores to a file",
     )
     args = parser.parse_args()
-    main(args.model_folder, args.dataset_folder, args.output_folder)
+    run_scoring(args.model_folder, args.dataset_folder, args.output_folder)

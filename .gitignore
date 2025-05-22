@@ -1,8 +1,22 @@
 *.Identifier
 
-#Ignoring pycache
+# Ignore Python cache files
 __pycache__/
+*.pytest_cache
 
 dist/
 
 *.txt 
+
+# Ignore environment files
+.env
+*.env
+
+# Ignore virtual environments
+venv/
+
+# Ignore MLflow artifacts
+mlruns/
+
+# Ignore outputs and intermediate files
+outputs/

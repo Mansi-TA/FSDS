@@ -2,8 +2,25 @@ import argparse
 import logging
 import os
 
+import mlflow
+from mlflow.tracking import MlflowClient
+
 from FSDS_.ingest import fetch_housing_data, load_housing_data
 from FSDS_.train import stratified_split
+
+mlflow.set_tracking_uri("file:./mlruns")
+
+client = MlflowClient()
+
+# Check if experiment exists by name
+experiment_name = "Default"
+experiment = client.get_experiment_by_name(experiment_name)
+
+if experiment is None:
+    client.create_experiment(experiment_name)
+
+# Set experiment
+mlflow.set_experiment(experiment_name)
 
 
 def setup_logging(log_filename, log_dir="logs"):
@@ -21,27 +38,36 @@ def setup_logging(log_filename, log_dir="logs"):
     logging.getLogger().addHandler(console)
 
 
-def main(output_folder):
+def run_ingestion(output_folder):
+
     setup_logging("ingest.log")
     logging.info("Starting data ingestion...")
 
-    os.makedirs(output_folder, exist_ok=True)
+    with mlflow.start_run(run_name="Data Ingestion", nested=True) as run:
 
-    logging.info("Fetching house data...")
-    fetch_housing_data()
-    house_df = load_housing_data()
+        print(f"Ingestion Run id:{run.info.run_id}")
+        mlflow.log_param("output_folder", output_folder)
 
-    logging.info("Performing stratified split...")
-    train_set, test_set = stratified_split(house_df)
+        os.makedirs(output_folder, exist_ok=True)
 
-    train_path = os.path.join(output_folder, "train.csv")
-    test_path = os.path.join(output_folder, "test.csv")
+        logging.info("Fetching house data...")
+        fetch_housing_data()
+        house_df = load_housing_data()
 
-    logging.info("Storing training and testing set...")
-    train_set.to_csv(train_path, index=False)
-    test_set.to_csv(test_path, index=False)
+        logging.info("Performing stratified split...")
+        train_set, test_set = stratified_split(house_df)
 
-    logging.info("Ingestion completed...")
+        train_path = os.path.join(output_folder, "train.csv")
+        test_path = os.path.join(output_folder, "test.csv")
+
+        logging.info("Storing training and testing set...")
+        train_set.to_csv(train_path, index=False)
+        test_set.to_csv(test_path, index=False)
+
+        mlflow.log_artifact(train_path, artifact_path="ingested_data")
+        mlflow.log_artifact(test_path, artifact_path="ingested_data")
+
+        logging.info("Ingestion completed...")
 
 
 if __name__ == "__main__":
@@ -53,4 +79,4 @@ if __name__ == "__main__":
         help="Path to train.csv and test.csv",
     )
     args = parser.parse_args()
-    main(args.output_folder)
+    run_ingestion(args.output_folder)

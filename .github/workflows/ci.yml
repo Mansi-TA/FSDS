@@ -2,7 +2,7 @@ name: CI Workflow
 
 on:
   push:
-    branches: [fix/#1]  # Change to 'main' for production
+    branches: [fix/#3]  
   pull_request:
     branches: [main]
 
@@ -121,11 +121,16 @@ jobs:
         shell: bash -l {0}
         run: |
           pip install downloaded/dist/*.whl
+          
+      - name: Create mlruns directory
+        run: mkdir -p ./mlruns
 
       - name: Run workflow scripts (log to console)
         shell: bash -l {0}
+        env:
+          MLFLOW_TRACKING_URI: file:./mlruns
         run: |
           echo "Running workflow scripts with timestamp logs"
-          python scripts/ingest_data.py --output_folder datasets/scripts
-          python scripts/train.py --output_folder datasets/models --input_folder datasets/scripts/
-          python scripts/score.py --model_folder datasets/models/ --dataset_folder datasets/scripts/ --output_folder datasets/results
+          python scripts/ingest_data.py --output_folder outputs/data
+          python scripts/train.py --output_folder outputs/model --input_folder outputs/data
+          python scripts/score.py --model_folder outputs/model --dataset_folder outputs/data --output_folder outputs/metric
