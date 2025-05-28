@@ -1,7 +1,8 @@
 name: Pull and Run Docker Images
 
 on:
-    workflow_dispatch:
+    push:
+        branches: fix/#3
 
 jobs:
     pull-and-run-ACR:
