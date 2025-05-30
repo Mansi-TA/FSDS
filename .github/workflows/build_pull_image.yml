@@ -1,4 +1,4 @@
-name: Build, push, pull and Run Docker Images
+name: Build, Push, Pull and Run Docker Images
 
 on:
     push:
@@ -18,7 +18,7 @@ jobs:
               echo "${{ secrets.ACR_PASSCODE }}" | docker login ${{ secrets.ACR_NAME }}.azurecr.io -u ${{ secrets.ACR_USERNAME }} --password-stdin
  
           - name: Build Docker Image
-            run: docker build -t fsds-image:lts
+            run: docker build -t fsds-image:lts .
 
           - name: Tag Docker image for ACR
             run: docker tag fsds-image:lts ${{ secrets.ACR_NAME }}.azurecr.io/fsds-image:lts
