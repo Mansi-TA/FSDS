@@ -133,3 +133,45 @@ jobs:
           python scripts/ingest_data.py --output_folder outputs/data
           python scripts/train.py --output_folder outputs/model --input_folder outputs/data
           python scripts/score.py --model_folder outputs/model --dataset_folder outputs/data --output_folder outputs/metric
+        
+  build-and-push-ACR:
+    name: Build and Push to ACR
+    needs: install
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Log in to Azure Container Registry
+        run: |
+          echo "${{ secrets.ACR_PASSCODE }}" | docker login ${{ secrets.ACR_NAME }}.azurecr.io -u ${{ secrets.ACR_USERNAME }} --password-stdin
+ 
+      - name: Build Docker Image
+        run: docker build -t fsds-image:lts .
+
+      - name: Tag Docker image for ACR
+        run: docker tag fsds-image:lts ${{ secrets.ACR_NAME }}.azurecr.io/fsds-image:lts
+
+      - name: Push Docker Image to ACR
+        run: docker push ${{ secrets.ACR_NAME }}.azurecr.io/fsds-image:lts
+
+
+  pull-and-run-ACR:
+    name: RUN ACR
+    needs: build-and-push-ACR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log in to Azure Container Registry
+        run: |
+          echo "${{ secrets.ACR_PASSCODE }}" | docker login ${{ secrets.ACR_NAME }}.azurecr.io -u ${{ secrets.ACR_USERNAME }} --password-stdin
+            
+      - name: Pull Docker image from ACR
+        run: docker pull ${{secrets.ACR_NAME}}.azurecr.io/fsds-image:lts
+            
+      - name: Run Docker container
+        run: docker run -d --name housing-model2 -p 8080:80 ${{secrets.ACR_NAME}}.azurecr.io/fsds-image:lts
+
+      - name: Check active container
+        run: docker ps
+            
