@@ -18,5 +18,3 @@ venv/
 # Ignore MLflow artifacts
 mlruns/
 
-# Ignore outputs and intermediate files
-outputs/

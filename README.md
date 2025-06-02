@@ -13,6 +13,9 @@ The following techniques have been used:
  - Multiple sampling techinuqies are evaluated. The data set is split into train and test.
  - All the above said modelling techniques are tried and evaluated. The final metric used to evaluate is mean squared error.
 
-## To excute the script
+## To excute the code
 1. run-pipeline
 2. python src/FSDS_/main.py
+
+## To execute the script that also uses MLflow and creates logs and keeps everything in a structured way.
+PYTHONPATH=src python main.py *folder-name*
