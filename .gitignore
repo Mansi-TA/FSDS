@@ -8,6 +8,8 @@ dist/
 
 *.txt 
 
+!drift.txt
+
 # Ignore environment files
 .env
 *.env

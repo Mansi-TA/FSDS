@@ -198,3 +198,15 @@ jobs:
       - name: Run monitoring script
         shell: bash -l {0}
         run: python scripts/monitor.py 
+        continue-on-error: true
+
+      - name: Check drift status
+        shell: bash -l {0}
+        run: |
+          if grep -q "drift:true" drift.txt; then
+            echo "Performance drift detected"
+            exit 1
+          else
+            echo "No Performance drift detected"
+            
+        

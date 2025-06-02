@@ -37,6 +37,7 @@ def check_performance_drift(json_path):
     with open(json_path, "r") as f:
         report_data = json.load(f)
 
+    drift_detected = False
     for metric in report_data.get("metrics", []):
         if metric.get("metric") == "RegressionQualityMetric":
             result = metric.get("result", {})
@@ -51,15 +52,17 @@ def check_performance_drift(json_path):
             if current_rmse is not None and reference_rmse is not None:
                 rmse_increase = (current_rmse - reference_rmse) / reference_rmse
                 print(f"RMSE increase: {rmse_increase:.2%}")
-
+                drift_detected = bool(rmse_increase > 0.25)
                 if rmse_increase > 0.25:
                     print("Performance drift detected")
-                    exit(1)
+                   
                 else:
                     print("No significant performance drift detected")
-                    exit(0)
-    print("No performance drift detected.")
-    sys.exit(0)
+                    
+
+    with open("drift.txt","w") as f:
+        f.write(f"drift:{'true' if drift_detected else 'false'}")
+
 
 
 if __name__ == "__main__":
