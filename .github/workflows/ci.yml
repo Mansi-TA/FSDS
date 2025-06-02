@@ -2,9 +2,9 @@ name: CI Workflow
 
 on:
   push:
-    branches: [fix/#3]  
+    branches: [fix/#6]  
   pull_request:
-    branches: [main]
+    branches: []
 
 jobs:
   style-test:
@@ -175,3 +175,39 @@ jobs:
       - name: Check active container
         run: docker ps
             
+  monitor-model:
+    name: Monitoring Drift
+    needs: pull-and-run-ACR
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Conda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          environment-file: env.yml
+          auto-activate-base: false
+          activate-environment: fsds-env
+      
+      - name: Install package in dev mode
+        shell: bash -l {0}
+        run: pip install -e .
+      
+      - name: Run monitoring script
+        shell: bash -l {0}
+        run: python scripts/monitor.py 
+        continue-on-error: true
+
+      - name: Check drift status
+        shell: bash -l {0}
+        run: |
+          if grep -q "drift:true" drift.txt; then
+            echo "Performance drift detected"
+            exit 1
+          else
+            echo "No Performance drift detected"
+          fi
+             
+        

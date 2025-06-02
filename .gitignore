@@ -8,6 +8,8 @@ dist/
 
 *.txt 
 
+!drift.txt
+
 # Ignore environment files
 .env
 *.env
@@ -18,5 +20,3 @@ venv/
 # Ignore MLflow artifacts
 mlruns/
 
-# Ignore outputs and intermediate files
-outputs/
