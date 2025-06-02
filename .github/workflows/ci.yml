@@ -208,5 +208,6 @@ jobs:
             exit 1
           else
             echo "No Performance drift detected"
+          fi
              
         
