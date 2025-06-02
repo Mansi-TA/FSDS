@@ -55,14 +55,12 @@ def check_performance_drift(json_path):
                 drift_detected = bool(rmse_increase > 0.25)
                 if rmse_increase > 0.25:
                     print("Performance drift detected")
-                   
+
                 else:
                     print("No significant performance drift detected")
-                    
 
-    with open("drift.txt","w") as f:
+    with open("drift.txt", "w") as f:
         f.write(f"drift:{'true' if drift_detected else 'false'}")
-
 
 
 if __name__ == "__main__":
