@@ -2,7 +2,7 @@ name: CI Workflow
 
 on:
   push:
-    branches: [fix/#5]  
+    branches: [fix/#6]  
   pull_request:
     branches: []
 
@@ -208,5 +208,5 @@ jobs:
             exit 1
           else
             echo "No Performance drift detected"
-            
+             
         
