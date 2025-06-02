@@ -38,14 +38,26 @@ def check_performance_drift(json_path):
         report_data = json.load(f)
 
     for metric in report_data.get("metrics", []):
-        if "name" in metric and metric["name"] == "RegressionPreset":
+        if metric.get("metric") == "RegressionQualityMetric":
             result = metric.get("result", {})
-            for target_name, values in result.items():
-                # Checking for drift or issues
-                if values.get("current", {}).get("dataset_drift") is True:
-                    print("Performance drift detected.")
-                    sys.exit(1)
 
+            # Extract RMSE values
+            current_rmse = result.get("current", {}).get("rmse")
+            reference_rmse = result.get("reference", {}).get("rmse")
+
+            print(f"Reference RMSE: {reference_rmse}")
+            print(f"Current RMSE: {current_rmse}")
+
+            if current_rmse is not None and reference_rmse is not None:
+                rmse_increase = (current_rmse - reference_rmse) / reference_rmse
+                print(f"RMSE increase: {rmse_increase:.2%}")
+
+                if rmse_increase > 0.25:
+                    print("Performance drift detected")
+                    exit(1)
+                else:
+                    print("No significant performance drift detected")
+                    exit(0)
     print("No performance drift detected.")
     sys.exit(0)
 
