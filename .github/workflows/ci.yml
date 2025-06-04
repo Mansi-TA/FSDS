@@ -95,7 +95,7 @@ jobs:
             dist/
             env.yml
 
-   install:
+  install:
     name: Install & Smoke Test
     runs-on: ubuntu-latest
     needs: build
