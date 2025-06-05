@@ -2,7 +2,7 @@ name: CI Workflow
 
 on:
   push:
-    branches: [fix/#7]  
+    branches: [fix/#6]  
   pull_request:
     branches: []
     
