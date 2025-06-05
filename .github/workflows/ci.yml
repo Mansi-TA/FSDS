@@ -3,11 +3,8 @@ name: CI Workflow
 on:
   push:
     branches: [fix/#6]  
-  pull_request:
-    branches: []
+  workflow_dispatch:
     
-permissions:
-  contents: write
 
 jobs:
   style-test:
