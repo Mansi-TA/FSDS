@@ -1,0 +1,98 @@
+{
+	"name": "dataflowtraintansform",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText2",
+						"type": "DatasetReference"
+					},
+					"name": "TrainSource"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText6",
+						"type": "DatasetReference"
+					},
+					"name": "train"
+				}
+			],
+			"transformations": [
+				{
+					"name": "TrainTransform"
+				},
+				{
+					"name": "aggregateforNonDuplicate"
+				},
+				{
+					"name": "selectOriginalColTrain"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          longitude as double,",
+				"          latitude as double,",
+				"          housing_median_age as double,",
+				"          total_rooms as double,",
+				"          total_bedrooms as double,",
+				"          population as double,",
+				"          households as double,",
+				"          median_income as double,",
+				"          median_house_value as double,",
+				"          ocean_proximity as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> TrainSource",
+				"TrainSource filter(!isNull(longitude) &&",
+				"!isNull(latitude) &&",
+				"!isNull(housing_median_age) &&",
+				"!isNull(total_rooms) &&",
+				"!isNull(total_bedrooms) &&",
+				"!isNull(population) &&",
+				"!isNull(households) &&",
+				"!isNull(median_income) &&",
+				"!isNull(median_house_value) &&",
+				"!isNull(ocean_proximity)) ~> TrainTransform",
+				"TrainTransform aggregate(groupBy(ocean_proximity,",
+				"          longitude,",
+				"          latitude,",
+				"          housing_median_age,",
+				"          total_rooms,",
+				"          total_bedrooms,",
+				"          population,",
+				"          households,",
+				"          median_income,",
+				"          median_house_value),",
+				"     dummy = count(1)) ~> aggregateforNonDuplicate",
+				"aggregateforNonDuplicate select(mapColumn(",
+				"          ocean_proximity,",
+				"          longitude,",
+				"          latitude,",
+				"          housing_median_age,",
+				"          total_rooms,",
+				"          total_bedrooms,",
+				"          population,",
+				"          households,",
+				"          median_income,",
+				"          median_house_value",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectOriginalColTrain",
+				"selectOriginalColTrain sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['Train_Transform.csv'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> train"
+			]
+		}
+	}
+}

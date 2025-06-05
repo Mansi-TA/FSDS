@@ -1,0 +1,34 @@
+{
+	"name": "triggerETL",
+	"properties": {
+		"description": "Triggers everyday.",
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "pipelineETL",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2025-06-04T17:28:00",
+				"endTime": "2025-06-07T17:28:00",
+				"timeZone": "India Standard Time",
+				"schedule": {
+					"minutes": [
+						1
+					],
+					"hours": [
+						0
+					]
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,98 @@
+{
+	"name": "dataflowtesttransform",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText4",
+						"type": "DatasetReference"
+					},
+					"name": "TestSource"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText7",
+						"type": "DatasetReference"
+					},
+					"name": "WriteTest"
+				}
+			],
+			"transformations": [
+				{
+					"name": "TestTranform"
+				},
+				{
+					"name": "RemoveDuplicateTest"
+				},
+				{
+					"name": "FinalColTest"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          longitude as double,",
+				"          latitude as double,",
+				"          housing_median_age as double,",
+				"          total_rooms as double,",
+				"          total_bedrooms as double,",
+				"          population as double,",
+				"          households as double,",
+				"          median_income as double,",
+				"          median_house_value as double,",
+				"          ocean_proximity as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> TestSource",
+				"TestSource filter(!isNull(longitude) &&",
+				"!isNull(latitude) &&",
+				"!isNull(housing_median_age) &&",
+				"!isNull(total_rooms) &&",
+				"!isNull(total_bedrooms) &&",
+				"!isNull(population) &&",
+				"!isNull(households) &&",
+				"!isNull(median_income) &&",
+				"!isNull(median_house_value) &&",
+				"!isNull(ocean_proximity)) ~> TestTranform",
+				"TestTranform aggregate(groupBy(ocean_proximity,",
+				"          longitude,",
+				"          latitude,",
+				"          housing_median_age,",
+				"          total_rooms,",
+				"          total_bedrooms,",
+				"          population,",
+				"          households,",
+				"          median_income,",
+				"          median_house_value),",
+				"     dummy = count(1)) ~> RemoveDuplicateTest",
+				"RemoveDuplicateTest select(mapColumn(",
+				"          ocean_proximity,",
+				"          longitude,",
+				"          latitude,",
+				"          housing_median_age,",
+				"          total_rooms,",
+				"          total_bedrooms,",
+				"          population,",
+				"          households,",
+				"          median_income,",
+				"          median_house_value",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> FinalColTest",
+				"FinalColTest sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['Test_transform.csv'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> WriteTest"
+			]
+		}
+	}
+}

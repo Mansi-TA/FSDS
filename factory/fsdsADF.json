@@ -1,0 +1,9 @@
+{
+	"name": "fsdsADF",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "28256790-70e4-4e7f-94a5-5e4cb915d686",
+		"tenantId": "e714ef31-faab-41d2-9f1e-e6df4af16ab8"
+	}
+}
