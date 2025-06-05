@@ -2,9 +2,12 @@ name: CI Workflow
 
 on:
   push:
-    branches: [fix/#6]  
+    branches: [fix/#7]  
   pull_request:
     branches: []
+    
+permissions:
+  contents: write
 
 jobs:
   style-test:
@@ -120,48 +123,20 @@ jobs:
         shell: bash -l {0}
         run: |
           pip install downloaded/dist/*.whl
-
-      - name: Install Azure CLI
-        run: |
-          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-
+          
       - name: Create mlruns directory
         run: mkdir -p ./mlruns
 
-      - name: Run ingest_data.py
+      - name: Run workflow scripts (log to console)
         shell: bash -l {0}
         env:
           MLFLOW_TRACKING_URI: file:./mlruns
         run: |
-          echo "Running ingest_data.py"
+          echo "Running workflow scripts with timestamp logs"
           python scripts/ingest_data.py --output_folder outputs/data
-
-          echo "Uploading data to Azure Blob Storage..."
-          az storage blob upload-batch \
-            --account-name ${{ secrets.AZURE_STORAGE_ACCOUNT }} \
-            --destination output/csv_files \
-            --source outputs/data \
-            --auth-mode login
-
-      - name: Download data from Azure Blob Storage
-        run: |
-          echo "Downloading data from Azure Blob Storage..."
-          rm -rf outputs/data && mkdir -p outputs/data
-          az storage blob download-batch \
-            --account-name ${{ secrets.AZURE_STORAGE_ACCOUNT }} \
-            --source output/csv_files \
-            --destination outputs/data \
-            --auth-mode login
-
-      - name: Run train.py and score.py
-        shell: bash -l {0}
-        env:
-          MLFLOW_TRACKING_URI: file:./mlruns
-        run: |
-          echo "Running training and scoring"
           python scripts/train.py --output_folder outputs/model --input_folder outputs/data
           python scripts/score.py --model_folder outputs/model --dataset_folder outputs/data --output_folder outputs/metric
-
+  
   build-and-push-ACR:
     name: Build and Push to ACR
     needs: install

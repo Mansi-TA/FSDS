@@ -47,7 +47,7 @@ def run_training(input_folder, output_folder):
 
     os.makedirs(output_folder, exist_ok=True)
 
-    train_path = os.path.join(input_folder, "train.csv")
+    train_path = os.path.join(input_folder, "Train_Transform.csv")
     logging.info(f"Loading data from {train_path}...")
     train_set = pd.read_csv(train_path)
 
