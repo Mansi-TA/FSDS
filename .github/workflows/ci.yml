@@ -3,8 +3,8 @@ name: CI Workflow
 on:
   push:
     branches: [fix/#6]  
-  pull_request:
-    branches: []
+  workflow_dispatch:
+    
 
 jobs:
   style-test:
@@ -133,7 +133,7 @@ jobs:
           python scripts/ingest_data.py --output_folder outputs/data
           python scripts/train.py --output_folder outputs/model --input_folder outputs/data
           python scripts/score.py --model_folder outputs/model --dataset_folder outputs/data --output_folder outputs/metric
-        
+  
   build-and-push-ACR:
     name: Build and Push to ACR
     needs: install

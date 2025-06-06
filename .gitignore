@@ -7,7 +7,6 @@ __pycache__/
 dist/
 
 *.txt 
-
 !drift.txt
 
 # Ignore environment files
@@ -20,3 +19,4 @@ venv/
 # Ignore MLflow artifacts
 mlruns/
 
+*.tgz
